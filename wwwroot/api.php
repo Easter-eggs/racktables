@@ -247,7 +247,13 @@ try {
                 assertUIntArg ("object_id", TRUE);
 
                 // get physical allocations
-                $racksData = getResidentRacksData ($_REQUEST['object_id']);
+                $racksData = array();
+                foreach (getResidentRackIDs ($_REQUEST['object_id']) as $rack_id)
+                {
+                    $rackData = spotEntity ('rack', $rack_id);
+                    amplifyCell ($rackData);
+                    $racksData[$rack_id] = $rackData;
+                }
 
                 // get zero-U allocations
                 $zeroURacks = array();
@@ -292,7 +298,7 @@ try {
 
 
                 // determine current "normal" allocations
-                foreach ( array_keys( getResidentRacksData ( $object_id ) ) as $rack_id )
+                foreach ( getResidentRacksIDs ( $object_id ) as $rack_id )
                 {
                   $allocationsOld[] = $rack_id;
                 }
@@ -672,7 +678,7 @@ try {
                 }
 
                 // Invalidate thumb cache of all racks objects could occupy.
-                foreach (getResidentRacksData ($object_id, FALSE) as $rack_id)
+                foreach (getResidentRacksIDs ($object_id) as $rack_id)
                         usePreparedDeleteBlade ('RackThumbnail', array ('rack_id' => $rack_id));
 
                 // ok, now we're good
@@ -943,7 +949,7 @@ try {
                 assertUIntArg ('object_id');
 
                 // determine racks the object is in
-                $racklist = getResidentRacksData ($_REQUEST['object_id'], FALSE);
+                $racklist = getResidentRacksIDs ($_REQUEST['object_id']);
                 commitDeleteObject ($_REQUEST['object_id']);
 
                 foreach ($racklist as $rack_id)
