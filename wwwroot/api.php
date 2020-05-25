@@ -298,7 +298,7 @@ try {
 
 
                 // determine current "normal" allocations
-                foreach ( getResidentRacksIDs ( $object_id ) as $rack_id )
+                foreach ( getResidentRackIDs ( $object_id ) as $rack_id )
                 {
                   $allocationsOld[] = $rack_id;
                 }
@@ -678,7 +678,7 @@ try {
                 }
 
                 // Invalidate thumb cache of all racks objects could occupy.
-                foreach (getResidentRacksIDs ($object_id) as $rack_id)
+                foreach (getResidentRackIDs ($object_id) as $rack_id)
                         usePreparedDeleteBlade ('RackThumbnail', array ('rack_id' => $rack_id));
 
                 // ok, now we're good
@@ -949,7 +949,7 @@ try {
                 assertUIntArg ('object_id');
 
                 // determine racks the object is in
-                $racklist = getResidentRacksIDs ($_REQUEST['object_id']);
+                $racklist = getResidentRackIDs ($_REQUEST['object_id']);
                 commitDeleteObject ($_REQUEST['object_id']);
 
                 foreach ($racklist as $rack_id)
